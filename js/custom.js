@@ -50,7 +50,8 @@ function numberInWords(a, genus, scale){
 	}
 	if(overflow) return 'Overflow';
 	function ending(a, n){
-		var lowOrderDigit = a % 10;
+		var lowOrderDigit = a % 100;
+		if(lowOrderDigit > 19) lowOrderDigit %= 10;
 		if(n > 0){
 			if(lowOrderDigit == 1){
 				return '';
@@ -69,17 +70,12 @@ function numberInWords(a, genus, scale){
 			}
 		}
 	}
-	var degree = 0;
 	var n = 0;
-	do{
-		degree = (n + 1) * 3;
-		if(a <= ((10 ** (degree + 3)) - 1)){
-			lowOrder = a % (10 ** degree);
-			highOrder = (a - lowOrder)/(10 ** degree);
-			return numberInWords(highOrder, (n > 0 ? true : false)) + ' ' + arr[n] + ending(highOrder, n) + ifZero(lowOrder, genus, scale);	
-		}
-		n++;
-	}while(a >= 10 ** degree);
+	while(a <= ((10 ** (3 * (n + 2))) - 1)) n++;
+	var degree = (n + 1) * 3;
+	lowOrder = a % (10 ** degree);
+	highOrder = (a - lowOrder)/(10 ** degree);
+	return numberInWords(highOrder, (n > 0 ? true : false)) + ' ' + arr[n] + ending(highOrder, n) + ifZero(lowOrder, genus, scale);
 }
 //-- end of function numberInWords ----------------------------
 
